@@ -1,0 +1,6 @@
+*.link
+*.o
+.ninja_deps
+.ninja_log
+build.ninja
+roms

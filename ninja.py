@@ -10,7 +10,7 @@ dirs = [
     "cpu_instrs",
 #    "dmg_sound",
      "instr_timing",
-#     "interrupt_timing",
+#     "interrupt_time",
 #     "mem_timing",
 #     "mem_timing-2",
 #     "oam_bug",
