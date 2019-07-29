@@ -56,3 +56,11 @@ c21ddacbfa44d61919c8e2d6c3e7d26e  ./cpu_instrs/08-misc instrs.gb
 5bccf6b03f661d92b2903694d458510c  ./cpu_instrs/03-op sp,hl.gb
 43fc8bfc94938b42d8ecc9ea8b6b811a  ./cpu_instrs/05-op rp.gb
 662f04537286d13ee55a6df9de4dce24  ./cpu_instrs/cpu_instrs.gb
+456c37a4763bfa1f409e3940418a3833  ./oam_bug-2/1-lcd_sync.gb
+2c4ab6055fa59514b4b26fd39a6bc6cb  ./oam_bug-2/2-causes.gb
+ffada50bbb6cc5f61803d04a98df2be5  ./oam_bug-2/3-non_causes.gb
+8886b294f39e7be17540d800f6af88d9  ./oam_bug-2/4-scanline_timing.gb
+83396ea02a657863b2165ad54103299b  ./oam_bug-2/5-timing_bug.gb
+4a8171930f611efc289a409f5e2559f9  ./oam_bug-2/6-timing_no_bug.gb
+6b6e3e2340060910d2b18a00eef0deee  ./oam_bug-2/7-timing_effect.gb
+149827759d5671f0ccfdf9420162186f  ./oam_bug-2/8-instr_effect.gb

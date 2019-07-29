@@ -1,5 +1,6 @@
 *.link
 *.o
+*.d
 .ninja_deps
 .ninja_log
 build.ninja
