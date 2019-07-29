@@ -8,8 +8,8 @@ import os.path
 dirs = [
     #"cgb_sound",
     "cpu_instrs",
-    # "dmg_sound",
-#     "instr_timing",
+#    "dmg_sound",
+     "instr_timing",
 #     "interrupt_timing",
 #     "mem_timing",
 #     "mem_timing-2",
@@ -19,7 +19,7 @@ dirs = [
 
 n = ninja_syntax.Writer(open("build.ninja", "w"))
 
-n.rule("compile", "wla-gb -I common $dmg_or_cgb -D TEST_NAME=\"$test_name\" $in")
+n.rule("compile", "wla-gb -I common $dmg_or_cgb $defines $in")
 n.rule("makelink", "./makelink $out $in")
 n.rule("link", "wlalink -d \"$linkfile\" $out")
 n.rule("checksums", "cd roms && md5sum --ignore-missing -c ../$sumfile")
@@ -29,7 +29,10 @@ for d in dirs:
     for s in glob.glob("{}/*.s".format(d)):
         (name, ext) = os.path.splitext(s)
         print (name)
-        compile_vars = {"test_name": os.path.basename(name)}
+        compile_vars = {"defines": "-D TEST_NAME=\"{}\"".format(os.path.basename(name))}
+        if d == "instr_timing":
+            compile_vars["defines"] += " -D ROM_NAME=\"{}\"".format("INSTR_TIMING")
+
         if d == "dmg_sound":
             compile_vars['dmg_or_cgb'] = "-D REQUIRE_DMG"
         elif d == "cgb_sound":
