@@ -17,7 +17,7 @@ python3 ninja.py && ninja
 ## Status
 Successful ROMS: 59/66 (89.39%)
 | Test ROM | MD5 CheckSum | Result |
-| - | - | - |
+| --- | --- | --- |
 | cgb_sound/01-registers.gb | f65df81d88a7f6eceeebf0097634aa8f | <span style="color:green">OK</span> |
 | cgb_sound/02-len ctr.gb | 4da68c214ff70cbb8ce61cc7b479c42b | <span style="color:green">OK</span> |
 | cgb_sound/03-trigger.gb | 3113d6041a249759d4e5d5dc216b2b53 | <span style="color:green">OK</span> |

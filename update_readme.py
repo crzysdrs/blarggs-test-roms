@@ -40,7 +40,7 @@ for l in lines:
 
 f.write("Successful ROMS: {}/{} ({:.2f}%)\n".format(count, total, 100 * float(count) / total ))
 f.write("| {} | {} | {} |\n".format("Test ROM", "MD5 CheckSum", "Result"))
-f.write("| - | - | - |\n")
+f.write("| --- | --- | --- |\n")
 
 for l in lines:
     match = msg.match(l)
