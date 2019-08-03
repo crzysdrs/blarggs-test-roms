@@ -26,7 +26,7 @@ main:
      ld   d,8
      call test_interrupt
      
-     check_crc $C86CC74D
+     check_crc $b511f33d
      jp   tests_passed
      
 test_interrupt:

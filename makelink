@@ -1,5 +1,12 @@
 #!/bin/bash
 f="$1"
-echo "[objects]" > "$f"
 shift
-echo "\"$@\"" >> "$f"
+if [[ -e $f ]]
+then
+   rm "$f"
+fi
+
+for var in "$@"
+do
+    echo \"$var\" >> "$f"
+done
