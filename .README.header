@@ -1,0 +1,16 @@
+# Blargg's Reproducible Test Roms
+
+## Goal
+
+Reproduce all of blargg's GameBoy test ROMs from source as an aid to debugging GameBoy emulators.
+
+## Build
+
+This project uses python3 to generate a Ninja file to build the ROMs. A makefile would have been easier but many of the filenames contained spaces and Makefiles do not support them effectively. All created ROMs will be emitted to the `roms/` subdirectory.
+
+All ROMs currently built with [wla-dx](https://github.com/vhelin/wla-dx).
+
+```
+python3 ninja.py && ninja
+```
+

@@ -27,56 +27,60 @@ n.rule("link", "wlalink '$linkfile' $out")
 n.rule("sub_bin", "dd if=$in skip=4096 bs=1 of=$out")
 n.rule("checksums", "cd roms && md5sum --ignore-missing -c ../$sumfile")
 
-# experimental multipart rom
-# for d in ["cpu_instrs"]:
-#     for s in glob.glob("{}/*.s".format(d)):
-#         (name, ext) = os.path.splitext(s)
-#         print (name)
-#         lib_name = os.path.basename(name)
-#         if lib_name == "top":
-#             continue
-#         sub_o = n.build("libs/{}.o".format(name), rule="compile", inputs=s, variables={
-#             'defines':'-D BUILD_MULTI',
-#             "includes": "-I {}/common ".format(d)
-#         })
-#         link = n.build("libs/{}.link".format(name), rule="makelink", inputs=sub_o)
-#         link_vars={"linkfile": link}
-#         normal_bin = n.build("libs/{}.gb".format(name), rule="link", inputs=link + sub_o, variables=link_vars)
-#         bins = n.build("libs/{}.bin".format(name), rule="sub_bin", inputs=normal_bin)
+def experimental_multipart_rom():
+    for d in ["cpu_instrs"]:
+        for s in glob.glob("{}/*.s".format(d)):
+            (name, ext) = os.path.splitext(s)
+            print (name)
+            lib_name = os.path.basename(name)
+            if lib_name == "top":
+                continue
+            sub_o = n.build("libs/{}.o".format(name), rule="compile", inputs=s, variables={
+                'defines':'-D BUILD_MULTI',
+                "includes": "-I {}/common ".format(d)
+            })
+            link = n.build("libs/{}.link".format(name), rule="makelink", inputs=sub_o)
+            link_vars={"linkfile": link}
+            normal_bin = n.build("libs/{}.gb".format(name), rule="link", inputs=link + sub_o, variables=link_vars)
+            bins = n.build("libs/{}.bin".format(name), rule="sub_bin", inputs=normal_bin)
 
-# sys.exit(0)
-# linkfile = n.build("{}.lib.link".format(name), rule="makelink", inputs=libs)
-# n.build("libs/{}.gb".format("cpu_instrs"), rule="link", inputs=linkfile + libs, variables=link_vars)
+    sys.exit(0)
+    linkfile = n.build("{}.lib.link".format(name), rule="makelink", inputs=libs)
+    n.build("libs/{}.gb".format("cpu_instrs"), rule="link", inputs=linkfile + libs, variables=link_vars)
 
 roms = []
 for d in dirs:
-
-
     for s in glob.glob("{}/*.s".format(d)):
         (name, ext) = os.path.splitext(s)
         print (name)
         test_name = os.path.basename(name)
-        if test_name == "top":
-            continue
-
-        compile_vars = {
-            "defines": "-D 'TEST_NAME=\"{}\"'".format(test_name),
-            "depfile": "$out.d",
-            "includes": "-I {}/common".format(os.path.dirname(name)),
+        defines = {
+            'TEST_NAME':test_name            
         }
+        includes = ["{}/common".format(os.path.dirname(name))]
+        
         if d == "interrupt_time":
-            compile_vars["defines"] = " -D 'TEST_NAME=\"{}\"'".format("interrupt time")
+            defines["TEST_NAME"] = "interrupt time"
         elif d == "instr_timing":
-            compile_vars["defines"] += " -D 'ROM_NAME=\"{}\"'".format("INSTR_TIMING")
+            defines["ROM_NAME"] = test_name.upper()
         elif d == "mem_timing-2":
             if test_name in ["02-write_timing", "03-modify_timing"]:
-                compile_vars["defines"] += ' -D \'ROM_NAME="{}"\' '.format(test_name.upper()[:15])
+                defines["ROM_NAME"] = test_name.upper()
         elif d == "oam_bug-2":
-            compile_vars["defines"] += ' -D \'ROM_NAME="{}"\' '.format(test_name.upper()[:15])
+            defines["ROM_NAME"] = test_name.upper()
         elif d == "dmg_sound":
-            compile_vars['defines'] += " -D REQUIRE_DMG"
+            defines["REQUIRE_DMG"] = 1
         elif d == "cgb_sound":
-            compile_vars['defines'] += " -D REQUIRE_CGB"
+            defines["REQUIRE_CGB"] = 1
+
+        if "ROM_NAME" in defines:
+            defines["ROM_NAME"] = defines["ROM_NAME"][:15]
+
+        compile_vars = {
+            "defines": " ".join(["-D '{}=\"{}\"'".format(k, v) for k, v in defines.items()]),
+            "depfile": "$out.d",
+            "includes": " ".join(["-I \"{}\"".format(i) for i in includes])
+        }
         objs = n.build("{}.o".format(name), rule="compile", inputs=[s], variables=compile_vars)
         linkfile = n.build("{}.link".format(name), rule="makelink", inputs=objs)
         link_vars={"linkfile": linkfile[0]}
