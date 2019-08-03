@@ -39,6 +39,7 @@ for l in lines:
         count += 1
 
 f.write("Successful ROMS: {}/{} ({:.2f}%)\n".format(count, total, 100 * float(count) / total ))
+f.write("\n")
 f.write("| {} | {} | {} |\n".format("Test ROM", "MD5 CheckSum", "Result"))
 f.write("| --- | --- | --- |\n")
 
