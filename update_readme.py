@@ -50,9 +50,9 @@ for l in lines:
     test = match.group(1)[2:]
     check = md5sums[match.group(1)]
     if match.group(2) == "FAILED open or read":
-        f.write("| {} | {} | {} |\n".format(test, check, '<span style="color:red">{}</span>'.format(expected[match.group(1)])))
+        f.write("| {} | `{}` | {} |\n".format(test, check, '<span style="color:red">{}</span>'.format(expected[match.group(1)])))
     elif match.group(2) == "OK":
-        f.write("| {} | {} | {} |\n".format(test, check, '<span style="color:green">OK</span>'))
+        f.write("| {} | `{}` | {} |\n".format(test, check, '<span style="color:green">OK</span>'))
     else:
         raise ("Unhandled error: {}".format(match.group(2)))
     
