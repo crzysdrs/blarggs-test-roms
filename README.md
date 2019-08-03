@@ -31,7 +31,7 @@ Successful ROMS: 59/66 (89.39%)
 | cgb_sound/10-wave trigger while on.gb | `3c2161f7c12097d387cc0bf012be82d4` | <span style="color:green">OK</span> |
 | cgb_sound/11-regs after power.gb | `3fed9f54a00299ccdce18a92ecc0b9bc` | <span style="color:green">OK</span> |
 | cgb_sound/12-wave.gb | `f6a581a7071d9a560a64be363918b553` | <span style="color:green">OK</span> |
-| cgb_sound/cgb_sound.gb | `612dcc096456e42f070e854a3bc5463a` | <span style="color:red">Multipart ROM</span> |
+| cgb_sound/cgb_sound.gb | `612dcc096456e42f070e854a3bc5463a` | <span style="color:red">FAIL: Multipart ROM</span> |
 | cpu_instrs/01-special.gb | `7d95af543a521ed036dc85f6f232d103` | <span style="color:green">OK</span> |
 | cpu_instrs/02-interrupts.gb | `d36a85bb94d4c1b373c0e7be0f6f0971` | <span style="color:green">OK</span> |
 | cpu_instrs/03-op sp,hl.gb | `5bccf6b03f661d92b2903694d458510c` | <span style="color:green">OK</span> |
@@ -43,7 +43,7 @@ Successful ROMS: 59/66 (89.39%)
 | cpu_instrs/09-op r,r.gb | `e4c4dd4eebad0c9d6f2ef575331c3aee` | <span style="color:green">OK</span> |
 | cpu_instrs/10-bit ops.gb | `64632849778ee83ae85db8bf68c84ebc` | <span style="color:green">OK</span> |
 | cpu_instrs/11-op a,(hl).gb | `6e64346be4d7ccf26f53de105d6cb5f6` | <span style="color:green">OK</span> |
-| cpu_instrs/cpu_instrs.gb | `662f04537286d13ee55a6df9de4dce24` | <span style="color:red">Multipart ROM</span> |
+| cpu_instrs/cpu_instrs.gb | `662f04537286d13ee55a6df9de4dce24` | <span style="color:red">FAIL: Multipart ROM</span> |
 | dmg_sound/01-registers.gb | `c89dcc0761693f0a42baf6c6a560222f` | <span style="color:green">OK</span> |
 | dmg_sound/02-len ctr.gb | `6473a525d5ac88166abf834d83a87aef` | <span style="color:green">OK</span> |
 | dmg_sound/03-trigger.gb | `8c0fc255250a20767cbc69e38e2fd945` | <span style="color:green">OK</span> |
@@ -56,18 +56,18 @@ Successful ROMS: 59/66 (89.39%)
 | dmg_sound/10-wave trigger while on.gb | `f2a6e1c4a34bfe501b26f4e1e02e4d85` | <span style="color:green">OK</span> |
 | dmg_sound/11-regs after power.gb | `489878d2529014556d852df9f043fd07` | <span style="color:green">OK</span> |
 | dmg_sound/12-wave write while on.gb | `bf7c0da1e5ad89a5809d607a3c3d0888` | <span style="color:green">OK</span> |
-| dmg_sound/dmg_sound.gb | `cf1a393540f001fb3a7f2da1bc7fbc3f` | <span style="color:red">Multipart ROM</span> |
-| halt_bug.gb | `93bdd72292b1f1c25290c7a3ae8b37b3` | <span style="color:red">Missing Source</span> |
+| dmg_sound/dmg_sound.gb | `cf1a393540f001fb3a7f2da1bc7fbc3f` | <span style="color:red">FAIL: Multipart ROM</span> |
+| halt_bug.gb | `93bdd72292b1f1c25290c7a3ae8b37b3` | <span style="color:red">FAIL: Missing Source</span> |
 | instr_timing/instr_timing.gb | `b417d5d06c3382ab5836b5d365184f36` | <span style="color:green">OK</span> |
 | interrupt_time/interrupt_time.gb | `9ff2376e37bc1e472e6f349ecd453b85` | <span style="color:green">OK</span> |
 | mem_timing-2/01-read_timing.gb | `47550d1bd635c0786f182cc1c19c6704` | <span style="color:green">OK</span> |
 | mem_timing-2/02-write_timing.gb | `688031034810e8065e5819acf650103d` | <span style="color:green">OK</span> |
 | mem_timing-2/03-modify_timing.gb | `758281d0945a50c870a325b3c730ec36` | <span style="color:green">OK</span> |
-| mem_timing-2/mem_timing.gb | `94fca018fdf41b618e8fbe6638352653` | <span style="color:red">Multipart ROM</span> |
+| mem_timing-2/mem_timing.gb | `94fca018fdf41b618e8fbe6638352653` | <span style="color:red">FAIL: Multipart ROM</span> |
 | mem_timing/01-read_timing.gb | `9537182264201f75611fc96a1de0f086` | <span style="color:green">OK</span> |
 | mem_timing/02-write_timing.gb | `d5cf8017991700f267b7b753579cc773` | <span style="color:green">OK</span> |
 | mem_timing/03-modify_timing.gb | `fd3516dca15be20bc124ce4523ae5ad3` | <span style="color:green">OK</span> |
-| mem_timing/mem_timing.gb | `4218b63c50350868cb4ebdef0a17429b` | <span style="color:red">Multipart ROM</span> |
+| mem_timing/mem_timing.gb | `4218b63c50350868cb4ebdef0a17429b` | <span style="color:red">FAIL: Multipart ROM</span> |
 | oam_bug-2/1-lcd_sync.gb | `456c37a4763bfa1f409e3940418a3833` | <span style="color:green">OK</span> |
 | oam_bug-2/2-causes.gb | `2c4ab6055fa59514b4b26fd39a6bc6cb` | <span style="color:green">OK</span> |
 | oam_bug-2/3-non_causes.gb | `ffada50bbb6cc5f61803d04a98df2be5` | <span style="color:green">OK</span> |
@@ -84,4 +84,4 @@ Successful ROMS: 59/66 (89.39%)
 | oam_bug/6-timing_no_bug.gb | `999ab335f59be2f7d5bab31e21990fcd` | <span style="color:green">OK</span> |
 | oam_bug/7-timing_effect.gb | `c71e334a9ae772953deb2c0949e7e467` | <span style="color:green">OK</span> |
 | oam_bug/8-instr_effect.gb | `300802bb284fe922c59d94cadb4c8b6f` | <span style="color:green">OK</span> |
-| oam_bug/oam_bug.gb | `dea628358e91e730e045fa07d8f655d5` | <span style="color:red">Multipart ROM</span> |
+| oam_bug/oam_bug.gb | `dea628358e91e730e045fa07d8f655d5` | <span style="color:red">FAIL: Multipart ROM</span> |
