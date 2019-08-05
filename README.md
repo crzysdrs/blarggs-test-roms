@@ -15,7 +15,7 @@ python3 ninja.py && ninja
 ```
 
 ## Status
-Successful ROMS: 59/66 (89.39%)
+Successful ROMS: 60/66 (90.91%)
 
 | Test ROM | MD5 CheckSum | Result |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Successful ROMS: 59/66 (89.39%)
 | cpu_instrs/09-op r,r.gb | `e4c4dd4eebad0c9d6f2ef575331c3aee` | <span style="color:green">OK</span> |
 | cpu_instrs/10-bit ops.gb | `64632849778ee83ae85db8bf68c84ebc` | <span style="color:green">OK</span> |
 | cpu_instrs/11-op a,(hl).gb | `6e64346be4d7ccf26f53de105d6cb5f6` | <span style="color:green">OK</span> |
-| cpu_instrs/cpu_instrs.gb | `662f04537286d13ee55a6df9de4dce24` | <span style="color:red">FAIL: Multipart ROM</span> |
+| cpu_instrs/cpu_instrs.gb | `662f04537286d13ee55a6df9de4dce24` | <span style="color:green">OK</span> |
 | dmg_sound/01-registers.gb | `c89dcc0761693f0a42baf6c6a560222f` | <span style="color:green">OK</span> |
 | dmg_sound/02-len ctr.gb | `6473a525d5ac88166abf834d83a87aef` | <span style="color:green">OK</span> |
 | dmg_sound/03-trigger.gb | `8c0fc255250a20767cbc69e38e2fd945` | <span style="color:green">OK</span> |
