@@ -39,8 +39,8 @@
 copy_to_wram_then_run:
      ld   b,a
      
-        ld   de,$C000
-        ld c, $10
+     ld   de,$C000
+     ld c, $10
 -    ld   a,(hl+)
      ld   (de),a
      inc  e
@@ -121,7 +121,7 @@ std_reset:
      wreg NR52,$80  ; sound on
      wreg NR51,$FF  ; mono
      wreg NR50,$77  ; volume
-        ld hl, $0b8f
+        ld hl, std_print
         ;ld   hl,bss_base           
         ;ld   bc,std_stack-bss_base - 2
 
@@ -155,9 +155,7 @@ exit:
      ld   sp,std_stack
      push af
      call +
-        ;;      call console_show
      pop  af
-        ;;         call play_byte
      jp   post_exit
 
 +:      push af
@@ -187,21 +185,23 @@ exit:
 
                 
 reset:
-        jp $0430
+        jp std_reset
         ret
+
+.define STACK_HI $d65f
+.define STACK_LO $d65e
+
 main:   
-        ld sp, $d65e
+        ld sp, STACK_LO
         ld b, $00
         ld c, $00
-
-
-init_text_out:        
-Jump_000_0642:
+        
+next_test:        
     ld a, b                                       ; $0642: $78
     srl a                                         ; $0643: $cb $3f
     srl a                                         ; $0645: $cb $3f
     inc a                                         ; $0647: $3c
-    ld ($2000), a                                 ; $0648: $ea $00 $20
+    ld (BANK), a                                 ; $0648: $ea $00 $20
     ld a, b                                       ; $064b: $78
     swap a                                        ; $064c: $cb $37
     and $30                                       ; $064e: $e6 $30
@@ -210,111 +210,97 @@ Jump_000_0642:
     ld e, $00                                     ; $0653: $1e $00
     ld a, (de)                                    ; $0655: $1a
     cp $c3                                        ; $0656: $fe $c3
-    jp nz, $0681                          ; $0658: $c2 $81 $06
+    jp nz, print_final_test_status                 ; $0658: $c2 $81 $06
 
     push bc                                       ; $065b: $c5
-    call $06f4                            ; $065c: $cd $f4 $06
+    call print_b_plus_1                           ; $065c: $cd $f4 $06
     ld hl, sp+$00                                 ; $065f: $f8 $00
     ld a, l                                       ; $0661: $7d
-    ld ($d65e), a                                 ; $0662: $ea $5e $d6
+    ld (STACK_LO), a                                 ; $0662: $ea $5e $d6
     ld a, h                                       ; $0665: $7c
-        ld ($d65f), a                                 ; $0666: $ea $5f $d6
+    ld (STACK_HI), a                                 ; $0666: $ea $5f $d6
     ld h, d                                       ; $0669: $62
     ld l, e                                       ; $066a: $6b
-    jp $200                              ; $066b: $c3 $00 $02
+    jp copy_to_wram_then_run                      ; $066b: $c3 $00 $02
 
-Jump_000_066e:
+test_complete:  
     ld d, a                                       ; $066e: $57
-    ld a, ($d65e)                                 ; $066f: $fa $5e $d6
+    ld a, (STACK_LO)                                 ; $066f: $fa $5e $d6
     ld l, a                                       ; $0672: $6f
-    ld a, ($d65f)                                 ; $0673: $fa $5f $d6
+    ld a, (STACK_HI)                                 ; $0673: $fa $5f $d6
     ld h, a                                       ; $0676: $67
     ld sp, hl                                     ; $0677: $f9
     ld a, d                                       ; $0678: $7a
     pop bc                                        ; $0679: $c1
-    call $06fd                            ; $067a: $cd $fd $06
+    call maybe_print_test_ok                      ; $067a: $cd $fd $06
     inc b                                         ; $067d: $04
-    jp $0642                              ; $067e: $c3 $42 $06
+    jp next_test                              ; $067e: $c3 $42 $06
 
-Jump_000_0681:
-    call $02ca                            ; $0681: $cd $ca $02
-    call $02ca                            ; $0684: $cd $ca $02
+print_final_test_status:
+    call print_newline                            ; $0681: $cd $ca $02
+    call print_newline                            ; $0684: $cd $ca $02
     ld a, c                                       ; $0687: $79
     cp $00                                        ; $0688: $fe $00
-    jr nz, jr_000_06a4                            ; $068a: $20 $18
+    jr nz, failed_c_tests                            ; $068a: $20 $18
 
-        print_str "Passed all tests"        
-        jr jr_000_06c2                                ; $06a2: $18 $1e
+    print_str "Passed all tests"        
+    jr finish_tests_print                                ; $06a2: $18 $1e
 
-jr_000_06a4:
+failed_c_tests:
         print_str "Failed "
-jr_000_06b0:
         ld a, c                                       ; $06b1: $79
         call print_dec
-        print_str " tests."       
-jr_000_06c2:
-    call $02ca                            ; $06c2: $cd $ca $02
-    call $04b6                            ; $06c5: $cd $b6 $04
-        call $04bb                            ; $06c8: $cd $bb $04
-        wreg NR11, $80
-        wreg NR12, $f1
-        wreg NR13, $00
+        print_str " tests."
+        
+finish_tests_print:
+    call print_newline                            ; $06c2: $cd $ca $02
+    call sound_off                            ; $06c5: $cd $b6 $04
+    call sound_on                            ; $06c8: $cd $bb $04
+    wreg NR11, $80
+    wreg NR12, $f1
+    wreg NR13, $00
     ld c, $0a                                     ; $06d7: $0e $0a
 
-jr_000_06d9:
-        wreg NR14, $87
-    push af                                       ; $06dd: $f5
-    ld a, $03                                     ; $06de: $3e $03
-    call $022f                            ; $06e0: $cd $2f $02
-    ld a, $ff                                     ; $06e3: $3e $ff
-    call $0222                            ; $06e5: $cd $22 $02
-    ld a, $cd                                     ; $06e8: $3e $cd
-    call $0213                            ; $06ea: $cd $13 $02
-    pop af                                        ; $06ed: $f1
+delay_c_times_250ms:
+    wreg NR14, $87
+    delay_msec 250
     dec c                                         ; $06ee: $0d
-    jr nz, jr_000_06d9                            ; $06ef: $20 $e8
+    jr nz, delay_c_times_250ms                    ; $06ef: $20 $e8
 
 forever2:
-        jp forever2                              ; $06f1: $c3 $f1 $06
+    jp forever2                              ; $06f1: $c3 $f1 $06
 
-Call_000_06f4:
+print_b_plus_1:
     ld a, b                                       ; $06f4: $78
     inc a                                         ; $06f5: $3c
-    call $0350                            ; $06f6: $cd $50 $03
-
-jr_000_06f9:
-    call $0851                            ; $06f9: $cd $51 $08
+    call print_dec2                            ; $06f6: $cd $50 $03
+    call console_flush                            ; $06f9: $cd $51 $08
     ret                                           ; $06fc: $c9
 
-Call_000_06fd:
+maybe_print_test_ok:
     ld d, a                                       ; $06fd: $57
-    call $05e3                            ; $06fe: $cd $e3 $05
-    push hl                                       ; $0701: $e5
-    call $02d2                            ; $0702: $cd $d2 $02
-    ld a, [hl-]                                   ; $0705: $3a
-    nop                                           ; $0706: $00
-    pop hl                                        ; $0707: $e1
+    call cpu_norm                            ; $06fe: $cd $e3 $05
+    print_str ":"
     ld a, d                                       ; $0708: $7a
     cp $00                                        ; $0709: $fe $00
-    jr nz, jr_000_071b                            ; $070b: $20 $0e
+    jr nz, print_test_not_ok                            ; $070b: $20 $0e
 
     print_str "ok  "
-    call $0851                            ; $0717: $cd $51 $08
+    call console_flush                            ; $0717: $cd $51 $08
     ret                                           ; $071a: $c9
 
-
-jr_000_071b:
+print_test_not_ok:
     inc c                                         ; $071b: $0c
     ld a, b                                       ; $071c: $78
-    call $0bb2                            ; $071d: $cd $b2 $0b
+    call play_byte                            ; $071d: $cd $b2 $0b
     ld a, d                                       ; $0720: $7a
-    call $0bb2                            ; $0721: $cd $b2 $0b
-    call $07fb                            ; $0724: $cd $fb $07
+    call play_byte                            ; $0721: $cd $b2 $0b
+    call console_inverse                            ; $0724: $cd $fb $07
     ld a, d                                       ; $0727: $7a
-    call $0350                            ; $0728: $cd $50 $03
-    call $07f8                            ; $072b: $cd $f8 $07
+    call print_dec2                            ; $0728: $cd $50 $03
+    call console_normal                            ; $072b: $cd $f8 $07
     print_str "  "
-    call $0851                            ; $0736: $cd $51 $08
+    call console_flush                            ; $0736: $cd $51 $08
     ret                                           ; $0739: $c9
 
 ;; ; Clears BC bytes starting at HL

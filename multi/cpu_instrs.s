@@ -3,7 +3,7 @@
 
 
 .org   $3ffd
-        jp $066e                              ; $3ffd: $c3 $6e $06
+        jp test_complete                              ; $3ffd: $c3 $6e $06
         
 .bank 1 slot 0
         .org $0        

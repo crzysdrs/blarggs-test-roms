@@ -61,15 +61,7 @@ unknown2:
     sta NR50
         wreg NR12, $f1
         wreg NR14, $86
-;;;  This is a macro delay of some kind value I haven't computed
-        push af
-         ld a, $03
-        call delay_65536a_9_cycles_
-        ld a, $ff
-        call delay_256a_9_cycles_
-        ld a, $cd
-        call delay_a_20_cycles
-        pop af
+        delay_msec 250
     ret
 
         
@@ -86,17 +78,9 @@ unknown_agian:
         ld a, $a0
 +       sta NR12
         wreg NR14, $87
-        push af
-        ld a, $01
-    call delay_256a_9_cycles_
-    ld a, $13
-    call  delay_a_20_cycles
-        pop af
+        delay $13b
         wreg NR12 $00
-    push af
-    ld a, $4c
-    call  delay_a_20_cycles
-    pop af
+        delay $69
     dec b
     jr nz,-
 
@@ -128,13 +112,8 @@ unknown_123:
 -   lda NR52
     and c
     jr z, +
-        
-    push af
-    ld a, $0f
-    call delay_256a_9_cycles_
-    ld a, $ce
-    call delay_a_20_cycles
-    pop af
+
+    delay $ff6 
     inc b
     jr nz, -
 +   ld a, b
@@ -156,13 +135,7 @@ sync_apu_fast:
 	ld	a,$02
 -	and	(hl)		; wait for length to expire
 	jr	nz,-
-
--   push af
-    ld a, $0f
-    call delay_256a_9_cycles_
-    ld a, $c5
-    call delay_a_20_cycles
-        pop af
+-      delay $FED
         wreg NR21, $ff
         wreg NR24, $c0
         lda NR52
@@ -170,8 +143,6 @@ sync_apu_fast:
     nop
     and $02
     jr nz, -
-
-	
 	pop	hl
 	pop	af
 	ret
@@ -274,30 +245,20 @@ sync_apu_fast:
 ; Preserved: BC, DE, HL
 ; Time: A*16384+48 clocks (including CALL)
 delay_apu_cycles:
-        ;;  This method is really some delay macro, expanded
-        or a
-        
+    ;;  This method is really some delay macro, expanded
+    or a
     jr nz, jr_001_6445
-
     ret
 
     push af
     ld a, $d3
     jr jr_001_6448
-
 jr_001_6445:
     push af
     ld a, $df
-
-
 jr_001_6448:
     call  delay_a_20_cycles
-    push af
-    ld a, $0e
-    call delay_256a_9_cycles_
-    ld a, $d8
-    call  delay_a_20_cycles
-    pop af
+    delay $f00
     pop af
     dec a
     jr nz, jr_001_6445
