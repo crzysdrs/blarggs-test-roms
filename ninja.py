@@ -45,7 +45,7 @@ def multipart_roms(d, s, defines, includes):
     link = n.build("libs/{}.link".format(name), rule="makelink", inputs=sub_o)
     link_vars={"linkfile": link}
     normal_bin = n.build("libs/{}.gb".format(name), rule="link", inputs=link + sub_o, variables=link_vars)
-    bins = n.build("libs/{}.bin".format(name), rule="sub_bin", inputs=normal_bin)
+    bins = n.build("libs/{}.subbin".format(name), rule="sub_bin", inputs=normal_bin)
     multis[d].append(bins[0])
     # linkfile = n.build("{}.lib.link".format(name), rule="makelink", inputs=libs)
     # n.build("libs/{}.gb".format("cpu_instrs"), rule="link", inputs=linkfile + libs, variables=link_vars)
@@ -104,7 +104,7 @@ for d in dirs:
 
 for name, l in multis.items():
     l.sort()
-    n.build("{}.bin".format(name), rule="combine", inputs=l)
+    n.build("{}.finalbin".format(name), rule="combine", inputs=l)
     override_checksums = {
         'cpu_instrs': 0x30f5
     }

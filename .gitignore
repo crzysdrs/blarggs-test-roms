@@ -2,7 +2,7 @@
 *.o
 *.d
 *.lst
-*.bin
+#*.bin
 .ninja_deps
 .ninja_log
 build.ninja
