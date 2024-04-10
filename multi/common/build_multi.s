@@ -7,7 +7,9 @@
 .endMe
 
 .romBankSize	$1000
-.romBanks		2
+.romBanks	2
+.romSize        1
+
 ;.emptyfill	$FF
 
 .org $70

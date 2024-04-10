@@ -8,6 +8,7 @@
 
 .romBankSize   $4000 ; generates $8000 byte ROM
 .romBanks      2
+.romSize       0
 
 .cartridgeType 1 ; MBC1
 .computeChecksum

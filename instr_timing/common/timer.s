@@ -13,7 +13,14 @@ init_timer:
      push af
      di
      lda  IE        ; disable timer interrupt
+; Older versions of Wla-gb would not compute the correct
+; value of ~$04, so the interrupt was not disabled correctly.
+; To match existing roms, this behavior has been preserved.
+.IFDEF BUGGY_TIMER
+     and  $04
+.ELSE
      and  ~$04
+.ENDIF
      sta  IE
      wreg TMA,0     ; max period
      wreg TAC,$05   ; 262144 Hz

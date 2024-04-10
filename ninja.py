@@ -73,7 +73,8 @@ for d in dirs:
         print (name)
         test_name = os.path.basename(name)
         defines = {
-            'TEST_NAME':test_name            
+            'TEST_NAME':test_name,
+            'BUGGY_TIMER':1
         }
         includes = ["{}/common".format(os.path.dirname(name))]
         

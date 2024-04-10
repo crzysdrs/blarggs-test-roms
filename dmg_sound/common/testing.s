@@ -135,8 +135,8 @@ print_crc:
           call print_newline
           call print_crc
      .else
-          ld   bc,(crc >> 16) ~ $FFFF
-          ld   de,(crc & $FFFF) ~ $FFFF
+          ld   bc,hiword(crc) ~ $FFFF
+          ld   de,loword(crc) ~ $FFFF
           call check_crc_
      .endif
 .endm

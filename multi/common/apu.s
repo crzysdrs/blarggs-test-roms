@@ -92,7 +92,7 @@ unknown____:
         push bc
         
     ld c, $30
--  ld ($FF00 + c), a
+-  ld ($FF00+c), a
     inc c
     bit 6, c
     jr z, -

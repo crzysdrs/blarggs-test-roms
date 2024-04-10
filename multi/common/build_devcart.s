@@ -7,6 +7,7 @@
 
 .romBankSize   $4000
 .romBanks     4
+.romSize      1
 
 .cartridgeType 1 ; MBC1+RAM
         .ramsize 00 ; 8K

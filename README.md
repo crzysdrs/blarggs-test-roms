@@ -8,11 +8,15 @@ Reproduce all of blargg's GameBoy test ROMs from source as an aid to debugging G
 
 This project uses python3 to generate a Ninja file to build the ROMs. A makefile would have been easier but many of the filenames contained spaces and Makefiles do not support them effectively. All created ROMs will be emitted to the `roms/` subdirectory.
 
-All ROMs currently built with [wla-dx](https://github.com/vhelin/wla-dx).
+All ROMs currently built with [wla-dx](https://github.com/vhelin/wla-dx) using [v10.6](https://github.com/vhelin/wla-dx/releases/tag/v10.6).
 
 ```
 python3 ninja.py && ninja
 ```
+
+## Notable Issues Found
+* `timer.s` does not correctly disable the timer interrupt. Older versions of `wla-gb` computed `~$04` as `$04`, which produces an incorrect mask for `IE`. This behavior has been preserved to match existing roms by enabling `BUGGY_TIMER`.
+* The global checksum included in the rom for `cgb_instrs.gb` is incorrect. It is explicitly overridden to match existing roms.
 
 ## Status
 Successful ROMS: 60/66 (90.91%)
