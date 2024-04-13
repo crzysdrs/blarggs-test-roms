@@ -29,6 +29,7 @@
 ; Stack is normally here
 .define std_stack $DFFF
 
+.ifndef BUILD_MULTI
 ; Copies $1000 bytes from HL to $C000, then jumps to it.
 ; A is preserved for jumped-to code.
 copy_to_wram_then_run:
@@ -56,7 +57,11 @@ copy_to_wram_then_run:
      
      .bank 1 slot 1
      .org $0 ; otherwise wla pads with lots of zeroes
-          jp   std_reset
+        jp   std_reset
+
+.endif
+        .else
+        jp std_reset
 .endif
 
 ; Common routines

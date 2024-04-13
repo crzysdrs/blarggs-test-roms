@@ -15,14 +15,6 @@
 .computeComplementCheck
 
 ;;;; GB ROM header
-
-     ; Reserve space for RST handlers
-     .org $70
-
-          ; Keep unused space filled, otherwise
-          ; wla moves code here
-          .ds $90,0
-     
      ; GB header read by bootrom
      .org $100
           nop
@@ -50,11 +42,8 @@
                     .byte $80
                .endif
           .endif
-     
-     ; Keep unused space filled, otherwise
-     ; wla moves code here
-     .org $150
-          .ds $2150-$150,0
+
+.org $2150
 
 ;;;; Shell
 

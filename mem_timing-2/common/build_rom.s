@@ -17,10 +17,6 @@
 .emptyfill $FF
 
 ;;;; GB ROM header
-
-.org $134
-     .ds 15,0
-
      ; Reserve space for RST handlers
      .org $70
 
@@ -41,16 +37,13 @@
      .byte $BB,$BB,$67,$63,$6E,$0E,$EC,$CC
      .byte $DD,$DC,$99,$9F,$BB,$B9,$33,$3E
      
-.section "HEADER" OVERWRITE
      ; Internal name
      .ifdef ROM_NAME
           .byte ROM_NAME
-     .else
-          .ifdef ROM_NAME_DEFAULT
-               .byte ROM_NAME_DEFAULT
+          .if ROM_NAME.length < 15
+          .ds 15 - ROM_NAME.length, 0 
           .endif
      .endif
-.ends
      
      ; CGB/DMG requirements
      .org $143
@@ -66,10 +59,7 @@
      .org $14A
           .byte 0,0,0
      
-     ; Keep unused space filled, otherwise
-     ; wla moves code here
-     .org $150
-          .ds $2150-$150,$FF
+.org $2150
 
 ;;;; Shell
 

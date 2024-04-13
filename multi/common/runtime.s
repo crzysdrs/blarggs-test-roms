@@ -63,7 +63,7 @@ copy_to_wram_then_run:
         .else
         jp std_reset
 .endif
-        
+
 ; Common routines
 .include "gb.inc"
 .include "macros.inc"
@@ -75,6 +75,7 @@ copy_to_wram_then_run:
      
 ; Sets up hardware and runs main
 std_reset:
+
      ; Init hardware
      di
      ld   sp,std_stack
@@ -83,11 +84,11 @@ std_reset:
      ld   (gb_id),a
      
      ; Init hardware
-     ;.ifndef BUILD_GBS          
+     .ifndef BUILD_GBS
           wreg TAC,$00
           wreg IF,$00
           wreg IE,$00
-     ;.endif                     
+     .endif
      
      wreg NR52,0    ; sound off
      wreg NR52,$80  ; sound on

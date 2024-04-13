@@ -280,6 +280,5 @@ console_flush_:
      pop  de
      ret
 
-
 ASCII:
      .incbin "console.bin"
