@@ -7,7 +7,6 @@
 ; Initializes checksum module. Might initialize tables
 ; in the future.
 init_crc:
-
      jr   reset_crc
 
 

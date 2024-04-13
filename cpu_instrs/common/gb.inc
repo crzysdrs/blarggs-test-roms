@@ -1,19 +1,36 @@
 ; Game Boy hardware addresses
 
+; $0000-$3FFF Fixed ROM bank
+; $4000-$7FFF Switchable bank
+; $8000-$9FFF VRAM
+; $A000-$BFFF optional cartridge RAM
+; $C000-$DFFF RAM
+; $E000-$FDFF RAM mirror
+; $FE00-$FE9F OAM
+; $FEA0-$FEFF unused
+; $FF00-$FF7F registers
+; $FF80-$FFFE RAM
+; $FFFF       register
+
 ; Memory
 .define VRAM   $8000 ; video memory
 .define TILES  $8000 ; tile images
 .define BGMAP0 $9800 ; first 32x32 tilemap
 .define BGMAP1 $9C00 ; second 32x32 tilemap
+.define BRAM   $A000 ; cart memory
 .define WRAM   $C000 ; internal memory
 .define OAM    $FE00 ; sprite memory
 .define HRAM   $FF80 ; fast memory for LDH
 
-.define P1     $FF00
+; Registers
+
+.define RAMEN  $0000 ; cartridge WRAM control
+.define BANK   $2000 ; bank select
+.define P1     $FF00 ; controller
 
 ; Game link I/O
-.define SB     $FF01
-.define SC     $FF02
+.define SB     $FF01 ; serial buffer
+.define SC     $FF02 ; serial control
 
 ; Interrupts
 .define DIV    $FF04

@@ -25,7 +25,7 @@
      ld   sp,hl
 .endm
 
-main:        
+main:
      call cpu_fast
      call init_crc_fast
      call checksums_init

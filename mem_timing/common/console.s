@@ -61,12 +61,9 @@ console_init:
      call @load_tiles
      
      ; Init state
-     ld   a,console_width
-     ld   (console_pos),a
-     ld   a,0
-     ld   (console_mode),a
-     ld   a,-8
-     ld   (console_scroll),a
+     setb console_pos,console_width
+     setb console_mode,0
+     setb console_scroll,-8
      call console_scroll_up_
      jr   console_show
 
@@ -97,13 +94,11 @@ console_init:
      jr   nz,-
      
      ; Clear attributes
-     ld   a,1
-     ld   (VBK),a
+     setb VBK,1
      ld   a,0
      call @fill_nametable
      
-     ld   a,0
-     ld   (VBK),a
+     setb VBK,0
      ret
 
 @load_tiles:
@@ -241,8 +236,7 @@ console_scroll_up_:
 -    ldd  (hl),a
      dec  b
      jr   nz,-
-     ld   a,<(console_buf + console_width)
-     ld   (console_pos),a
+     setb console_pos,<(console_buf + console_width)
      
      pop  hl
      pop  bc

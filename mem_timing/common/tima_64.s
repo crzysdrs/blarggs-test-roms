@@ -7,16 +7,19 @@ init_tima_64:
      ret
 
 ; Synchronizes to timer
+; Preserved: AF, BC, DE, HL
 sync_tima_64:
      push af
      push hl
      
+     ; Coarse
      ld   a,0
      ld   hl,TIMA
      ld   (hl),a
 -    or   (hl)
      jr   z,-
      
+     ; Fine
 -    delay 65-12
      xor  a
      ld   (hl),a

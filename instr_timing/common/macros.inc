@@ -22,6 +22,24 @@
      sta  addr
 .endm
 
+; Writes byte to addr
+; Preserved: F, BC, DE, HL
+; Time: 6 cycles
+.macro setb ; addr, data
+     ld   a,\2
+     ld   (\1),a
+.endm
+
+; Writes word to addr
+; Preserved: F, BC, DE, HL
+; Time: 12 cycles
+.macro setw ; addr, data
+     ld   a,<\2
+     ld   (\1),a
+     ld   a,>\2
+     ld   (\1+1),a
+.endm
+
 ; Calls routine multiple times, with A having the
 ; value 'start' the first time, 'start+step' the
 ; second time, up to 'end' for the last time.

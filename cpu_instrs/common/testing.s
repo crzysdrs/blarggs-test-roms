@@ -1,13 +1,15 @@
 ; Diagnostic and testing utilities
 
-.define result      bss+0
+.define test_code   bss+0
 .define test_name   bss+1
 .redefine bss       bss+3
 
 
-; Sets test code and optional error text
+; Sets test code and optional error text.
+; Takes multiple strings due to wla's idiotic
+; default limit of 63 chars per string.
 ; Preserved: AF, BC, DE, HL
-.macro set_test ; code[,text[,text2]]
+.macro set_test ; code[,text[,text2[,text3]]]
      push hl
      call set_test_
      jr   @set_test\@
@@ -17,6 +19,9 @@
      .endif
      .if NARGS > 2
           .byte \3
+     .endif
+     .if NARGS > 3
+          .byte \4
      .endif
      .byte 0
 @set_test\@:
@@ -30,7 +35,7 @@ set_test_:
      inc  hl
      inc  hl
      ldi  a,(hl)
-     ld   (result),a
+     ld   (test_code),a
      ld   a,l
      ld   (test_name),a
      ld   a,h
@@ -58,7 +63,7 @@ tests_passed:
 ; "Passed" if set_test 0 was last used, or
 ; failure if set_test n was last used.
 tests_done:
-     ld   a,(result)
+     ld   a,(test_code)
      inc  a
      jr   z,+
      dec  a
@@ -82,7 +87,7 @@ test_failed:
      call print_str_hl
      call print_newline
 +    
-     ld   a,(result)
+     ld   a,(test_code)
      cp   1         ; if a = 0 then a = 1
      adc  0
      jp   exit
@@ -130,9 +135,23 @@ print_crc:
           call print_newline
           call print_crc
      .else
-          ld   bc,(crc >> 16) ~ $FFFF
-          ld   de,(crc & $FFFF) ~ $FFFF
+          ld   bc,hiword(crc) ~ $FFFF
+          ld   de,loword(crc) ~ $FFFF
           call check_crc_
+     .endif
+.endm
+
+; Checks CRC, differing based on DMG or CGB build
+.macro check_crc_dmg_cgb ARGS dmg, cgb
+     .ifdef REQUIRE_DMG
+          check_crc dmg
+     .else
+          .ifdef REQUIRE_CGB
+               check_crc cgb
+          .else
+               .printt "CGB or DMG must be specified"
+               .fail
+          .endif
      .endif
 .endm
 

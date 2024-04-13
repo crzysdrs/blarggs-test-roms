@@ -73,7 +73,7 @@
           ld   a,0+(((high<<16)+n) - 11) >> 16
           call delay_65536a_9_cycles_
           delay_nosave_ (((high<<16)+n) - 11)&$FFFF, 0
-.endm
+     .endm
      
      ; Doesn't save AF, allowing minimization of AF save/restore
      .macro delay_nosave_ ARGS n, high
@@ -100,7 +100,7 @@
                     .endif
                .endif
           .endif
-.endm
+     .endm
      
      .macro delay_ ARGS low, high
           .if (high*(max_short_delay+1))|low > max_short_delay
@@ -110,7 +110,7 @@
           .else
                delay_short_ low
           .endif
-.endm
+     .endm
 
 
 ; Delays A cycles + overhead

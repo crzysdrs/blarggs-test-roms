@@ -57,7 +57,6 @@ copy_to_wram_then_run:
      .define RST_OFFSET 0
 .endif
 
-        
 .ifndef CUSTOM_RESET
      reset:
           di
@@ -70,8 +69,7 @@ copy_to_wram_then_run:
      
      .bank 1 slot 1
      .org 0
-        jp   std_reset
-  
+          jp   std_reset
 .endif
 
 
@@ -92,11 +90,10 @@ copy_to_wram_then_run:
 .endif
         
 ; Common routines
-.include "gb.inc"        
+.include "gb.inc"
 .include "macros.inc"
 .include "delay.s"
 .include "crc.s"
-        
 .include "printing.s"
 .include "numbers.s"
 .include "testing.s"
@@ -111,12 +108,12 @@ std_reset:
      ; Save DMG/CGB id
      ld   (gb_id),a
      
-                                ; Clear memory except very top of stack
-             ; Init hardware
+     ; Clear memory except very top of stack
+     ; Init hardware
      wreg TAC,$00
      wreg IF,$00
      wreg IE,$00
-             
+     
      wreg NR52,0    ; sound off
      wreg NR52,$80  ; sound on
      wreg NR51,$FF  ; mono
@@ -148,7 +145,7 @@ std_reset:
      ; Default is to successful exit
      ld   a,0
      jp   exit
-        
+
 
 ; Exits code and reports value of A
 exit:
@@ -158,9 +155,9 @@ exit:
      pop  af
      jp   post_exit
 
-+:      push af
-        call print_newline
-        call show_printing
++    push af   
+     call print_newline
+     call show_printing
      pop  af
      
      ; Report exit status
@@ -373,6 +370,7 @@ print_test_not_ok:
           jp   console_print
 .endif
 
+
 ; only build_rom uses console
 .ifdef NEED_CONSOLE
      .include "console.s"
@@ -397,9 +395,8 @@ print_test_not_ok:
 -         jr   -
 .endif
 
-        
+
 .macro def_rst ARGS addr
      .bank 0 slot 0
      .org addr+RST_OFFSET
-        .endm
-
+.endm

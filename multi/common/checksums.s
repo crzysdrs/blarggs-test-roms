@@ -10,7 +10,6 @@
 ; table (defined by user).
 ; Preserved: BC, DE, HL
 checksums_init:
-        
      ld   a,<checksums
      ld   (next_checksum),a
      ld   a,>checksums
