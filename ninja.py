@@ -30,18 +30,28 @@ n.rule("makelink", "./makelink $out '[objects]' $in")
 n.rule("link", "wlalink -S $linkfile $out")
 n.rule("checksums", "cd roms && md5sum --ignore-missing -c ../$sumfile")
 
-multis = defaultdict(list)
+MULTI = {
+    'cpu_instrs': {
+        'defines': {
+            "ROM_NAME": "CPU_INSTRS",
+            "MULTI_TEST_NAME": "cpu_instrs",
+            "BUILD_DEVCART": 1,
+            "OVERRIDE_GLOBAL_CHECKSUM": 0x30F5,
+        }
+    }
+}
 
 
 def multipart_roms(d, s, defines, includes):
     (name, ext) = os.path.splitext(s)
-    if s.find("cpu_instrs") < 0:
+    if d not in MULTI:
         return None
     lib_name = os.path.basename(name)
     defines.pop("ROM_NAME", "")
     defines.pop("TEST_NAME", "")
     defines["BUILD_MULTI"] = 1
-    includes = ["multi/common"]
+    #includes = ["multi/common"]
+    includes = ["{}/common".format(d)]
     compile_vars = get_compile_vars(defines, includes)
     sub_o = n.build(
         "libs/{}.o".format(name), rule="compile", inputs=[s], variables=compile_vars
@@ -54,7 +64,10 @@ def multipart_roms(d, s, defines, includes):
         inputs=link + sub_o,
         variables=link_vars,
     )
-    multis[d] += normal_bin
+    if MULTI[d].get('deps') is None:
+        MULTI[d]['deps'] = []
+        
+    MULTI[d]['deps'] += normal_bin
 
 
 def create_define(k, v):
@@ -66,7 +79,7 @@ def create_define(k, v):
 
 
 def escape_shell(v):
-    v = re.sub(r"""(['"\{\}\(\)\[\]\+\*\\\$])""", r"\\\1", v)
+    v = re.sub(r"""(['"\{\}\(\)\[\]\+\*\\\$ ])""", r"\\\1", v)
     return v
 
 
@@ -137,23 +150,17 @@ for d in dirs:
         )
 
 
-for name, l in multis.items():
-    l.sort()
-    override_checksums = {"cpu_instrs": 0x30F5}
-    defines = {
-        "ROM_NAME": "CPU_INSTRS",
-        "MULTI_TEST_NAME": "cpu_instrs",
-        "BUILD_DEVCART": 1,
-    }
-    includes = ["multi/common"]
-    if name in override_checksums:
-        defines["OVERRIDE_GLOBAL_CHECKSUM"] = override_checksums[name]
+for name, multi in MULTI.items():
+    multi['deps'].sort()
+    multi['vars'] = {}
+    multi['vars']['includes'] = ["{}/common".format(name)]
 
     objs = n.build(
-        "{}.multi.o".format(name),
+        "{}.all.o".format(name),
         rule="compile",
-        inputs="multi/cpu_instrs.s",
-        variables=get_compile_vars(defines, includes),
+        inputs="multi/{}.s".format(name),
+        variables=get_compile_vars(multi['defines'], multi['vars']['includes']),        
+        implicit=multi['deps']
     )
     linkfile = n.build("{}.link".format(name), rule="makelink", inputs=objs)
     link_vars = {"linkfile": escape_both(linkfile[0])}

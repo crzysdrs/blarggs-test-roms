@@ -26,6 +26,7 @@
 .define NO_COPY 1
 
         .include "runtime.s"
+        .ends
         .section "RETS" returnorg
 
         init_runtime:
