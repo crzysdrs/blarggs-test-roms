@@ -3,8 +3,8 @@
 ; Turns APU off
 ; Preserved: BC, DE, HL
 sound_off:
-     wreg NR52,0
-     ret
+	wreg	NR52,0
+	ret
 
 
 ; Turns APU on
@@ -34,29 +34,29 @@ sync_apu:
 ; tens of clocks. Uses square 1 channel.
 ; Preserved: BC, DE, HL
 sync_sweep:
-     wreg NR10,$11  ; sweep period = 1, shift = 1
-     wreg NR12,$08  ; silent without disabling channel
-     wreg NR13,$FF  ; freq = $3FF
-     wreg NR14,$83  ; start
--    lda  NR52
-     and  $01
-     jr   nz,-
-     ret
+	wreg	NR10,$11	; sweep period = 1, shift = 1
+	wreg	NR12,$08	; silent without disabling channel
+	wreg	NR13,$FF	; freq = $3FF
+	wreg	NR14,$83	; start
+-	lda	NR52
+	and	$01
+	jr	nz,-
+	ret
 
 
 ; Copies 16-byte wave from (HL) to wave RAM
 ; Preserved: BC, DE
 load_wave:
-     push bc
-     wreg NR30,$00  ; disable while writing
-     ld   c,$30
--    ld   a,(hl+)
-     ld   ($FF00+c),a
-     inc  c
-     bit  6,c
-     jr   z,-
-     pop  bc
-     ret
+	push	bc
+	wreg	NR30,$00	; disable while writing
+	ld	c,$30
+-	ld	a,(hl+)
+	ld	($FF00+c),a
+	inc	c
+	bit	6,c
+	jr	z,-
+	pop	bc
+	ret
 
 
 ; Makes short beep
@@ -116,18 +116,18 @@ fill_wave:
 ; must be enabled for that channel.
 ; Preserved: BC, DE, HL
 get_len_a:
-     push bc
-     ld   c,a
-     ld   b,0
--    lda  NR52      ; 3
-     and  c         ; 1
-     jr   z,+       ; 2
-     delay 4096-10
-     inc  b         ; 1
-     jr   nz,-      ; 3
-+    ld   a,b
-     pop  bc
-     ret
+	push	bc
+	ld	c,a
+	ld	b,0
+-	lda	NR52		; 3
+	and	c		; 1
+	jr	z,+		; 2
+	delay 4096-10
+	inc	b		; 1
+	jr	nz,-		; 3
++	ld	a,b
+	pop	bc
+	ret
 
 
 ; Synchronizes exactly to length clock. Next length clock

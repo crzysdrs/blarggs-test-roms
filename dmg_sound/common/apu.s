@@ -10,10 +10,10 @@ sound_off:
 ; Turns APU on
 ; Preserved: BC, DE, HL
 sound_on:
-	wreg	NR52,$80	; power
-	wreg NR51,$FF	; mono
-	wreg NR50,$77	; volume
-	ret
+     wreg NR52,$80  ; power
+     wreg NR51,$FF  ; mono
+     wreg NR50,$77  ; volume
+     ret
 
 
 ; Synchronizes to APU length counter within
