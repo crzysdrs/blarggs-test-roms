@@ -6,6 +6,7 @@ import re
 import os.path
 import sys
 from collections import defaultdict
+import itertools
 
 dirs = [
     "cgb_sound",
@@ -26,10 +27,7 @@ n.rule(
     "wla-gb -M $includes $defines $in > $out.d && wla-gb -o $out $includes $defines $in",
 )
 n.rule("makelink", "./makelink $out '[objects]' $in")
-n.rule("link", "wlalink -S '$linkfile' $out")
-n.rule("sub_bin", "dd if=$in skip=4096 bs=1 count=4096 of=$out")
-n.rule("combine", "cat $in > $out")
-
+n.rule("link", "wlalink -S $linkfile $out")
 n.rule("checksums", "cd roms && md5sum --ignore-missing -c ../$sumfile")
 
 multis = defaultdict(list)
@@ -49,29 +47,47 @@ def multipart_roms(d, s, defines, includes):
         "libs/{}.o".format(name), rule="compile", inputs=[s], variables=compile_vars
     )
     link = n.build("libs/{}.link".format(name), rule="makelink", inputs=sub_o)
-    link_vars = {"linkfile": link}
+    link_vars = {"linkfile": escape_both(link[0])}
     normal_bin = n.build(
-        "libs/{}.gb".format(name), rule="link", inputs=link + sub_o, variables=link_vars
+        "libs/{}.multi.gb".format(name),
+        rule="link",
+        inputs=link + sub_o,
+        variables=link_vars,
     )
-    bins = n.build("libs/{}.subbin".format(name), rule="sub_bin", inputs=normal_bin)
-    multis[d].append(bins[0])
-    # linkfile = n.build("{}.lib.link".format(name), rule="makelink", inputs=libs)
-    # n.build("libs/{}.gb".format("cpu_instrs"), rule="link", inputs=linkfile + libs, variables=link_vars)
+    multis[d] += normal_bin
 
 
 def create_define(k, v):
     try:
         int(v)
-        return "-D {}=0{:x}h".format(k, int(v))
+        return ["-D", "{}=0{:x}h".format(k, int(v))]
     except:
-        return "-D '{}=\"{}\"'".format(k, v)
+        return ["-D", '{}="{}"'.format(k, v)]
 
+
+def escape_shell(v):
+    v = re.sub(r"""(['"\{\}\(\)\[\]\+\*\\\$])""", r"\\\1", v)
+    return v
+
+
+def escape_ninja(v):
+    v = re.sub("\$", "$$", v)
+    v = re.sub(" ", "$ ", v)
+    return v
+
+def escape_both(v):
+    return escape_ninja(escape_shell(v))
 
 def get_compile_vars(defines, includes, other=None):
+    defines = [create_define(k, v) for k, v in defines.items()]
+    defines = itertools.chain.from_iterable(defines)
+
     compile_vars = {
-        "defines": " ".join([create_define(k, v) for k, v in defines.items()]),
+        "defines": " ".join([escape_both(d) for d in defines]),
         "depfile": "$out.d",
-        "includes": " ".join(['-I "{}"'.format(i) for i in includes]),
+        "includes": " ".join(
+            ["-I {}".format(escape_both(i)) for i in includes]
+        ),
     }
     if other:
         compile_vars += other
@@ -110,7 +126,7 @@ for d in dirs:
         )
         multipart_roms(d, s, defines, includes)
         linkfile = n.build("{}.link".format(name), rule="makelink", inputs=objs)
-        link_vars = {"linkfile": linkfile[0]}
+        link_vars = {"linkfile": escape_both(linkfile[0])}
         roms.extend(
             n.build(
                 "roms/{}.gb".format(name),
@@ -123,7 +139,6 @@ for d in dirs:
 
 for name, l in multis.items():
     l.sort()
-    n.build("{}.finalbin".format(name), rule="combine", inputs=l)
     override_checksums = {"cpu_instrs": 0x30F5}
     defines = {
         "ROM_NAME": "CPU_INSTRS",
@@ -141,7 +156,7 @@ for name, l in multis.items():
         variables=get_compile_vars(defines, includes),
     )
     linkfile = n.build("{}.link".format(name), rule="makelink", inputs=objs)
-    link_vars = {"linkfile": linkfile[0]}
+    link_vars = {"linkfile": escape_both(linkfile[0])}
     roms.extend(
         n.build(
             "roms/{}/{}.gb".format(name, name),
